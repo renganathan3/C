@@ -1,0 +1,80 @@
+#include <stdio.h>
+
+// Max bounds given by constraints
+#define MAX_SIZE 1005
+
+char grid[MAX_SIZE][MAX_SIZE];
+int up_count[MAX_SIZE][MAX_SIZE];
+
+int main() {
+    int m, n;
+    if (scanf("%d %d", &m, &n) != 2) return 0;
+    
+    // Read the grid characters safely skipping whitespaces
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf(" %c", &grid[i][j]);
+        }
+    }
+    
+    // Precompute the consecutive number of '.' cells going vertically upwards
+    for (int j = 0; j < n; j++) {
+        int count = 0;
+        for (int i = 0; i < m; i++) {
+            if (grid[i][j] == 'x') {
+                count = 0;
+            } else {
+                count++;
+            }
+            up_count[i][j] = count;
+        }
+    }
+    
+    int max_p = -1;
+    
+    // Iterate through all pairs of top rows (r1) and bottom rows (r2)
+    for (int r1 = 0; r1 < m; r1++) {
+        for (int r2 = m - 1; r2 > r1; r2--) {
+            
+            // Optimization Pruning: 
+            // If the maximum possible perimeter for this row distance cannot beat max_p, 
+            // break early because decreasing r2 further will only yield smaller perimeters.
+            if (2 * (r2 - r1 + n - 1) <= max_p) {
+                break;
+            }
+            
+            int best_c1 = -1;
+            
+            // Linear scan across columns to find the best horizontal endpoints
+            for (int c = 0; c < n; c++) {
+                // If there's a swamp on either the top or bottom horizontal border,
+                // the current rectangle cannot continue across this column.
+                if (grid[r1][c] == 'x' || grid[r2][c] == 'x') {
+                    best_c1 = -1;
+                } else {
+                    // Check if this column forms a continuous valid vertical segment between r1 and r2
+                    if (up_count[r2][c] >= r2 - r1 + 1) {
+                        if (best_c1 == -1) {
+                            best_c1 = c; // Establish the leftmost possible column boundary
+                        } else {
+                            // Compute perimeter using the current column as the right boundary
+                            int p = 2 * (r2 - r1) + 2 * (c - best_c1);
+                            if (p > max_p) {
+                                max_p = p;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    // Print the final result matching format conditions
+    if (max_p == -1) {
+        printf("impossible\n");
+    } else {
+        printf("%d\n", max_p);
+    }
+    
+    return 0;
+}
