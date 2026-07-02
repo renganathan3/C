@@ -1,0 +1,55 @@
+#include <stdio.h>
+
+// Max bounds given by constraints
+#define MAX_X 50
+#define MAX_N 50
+#define MAX_Y 3
+
+// Global lookup table for O(1) queries during test cases
+// dp[X][Y][N] will store the N-th element of the sequence
+long long dp[MAX_X][MAX_Y][MAX_N + 1];
+
+void precompute() {
+    for (int x = 1; x < MAX_X; x++) {
+        for (int y = 0; y < MAX_Y; y++) {
+            long long series[105];
+            
+            // Step 1: Initialize the first X elements with Y
+            for (int i = 1; i <= x; i++) {
+                series[i] = y;
+                if (i <= MAX_N) {
+                    dp[x][y][i] = y;
+                }
+            }
+            
+            // Step 2: Compute subsequent elements up to MAX_N
+            for (int i = x + 1; i <= MAX_N; i++) {
+                long long sum = 0;
+                // Sum the last X elements
+                for (int j = i - 1; j >= i - x; j--) {
+                    sum += series[j];
+                }
+                series[i] = sum;
+                dp[x][y][i] = sum;
+            }
+        }
+    }
+}
+
+int main() {
+    // Fill the lookup table before reading test cases
+    precompute();
+    
+    int t;
+    if (scanf("%d", &t) != 1) return 0;
+    
+    // Process test cases via fast lookup
+    while (t--) {
+        int x, y, n;
+        if (scanf("%d %d %d", &x, &y, &n) == 3) {
+            printf("%lld\n", dp[x][y][n]);
+        }
+    }
+    
+    return 0;
+}
