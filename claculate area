@@ -1,0 +1,36 @@
+#include <stdio.h>
+
+#define PI 3.14159265358979323846
+
+int main() {
+    int choice;
+    
+    // Read user choice directly without printing descriptive text menus
+    if (scanf("%d", &choice) != 1) {
+        return 0;
+    }
+
+    if (choice == 1) {
+        double radius;
+        if (scanf("%lf", &radius) == 1) {
+            double area = PI * radius * radius;
+            printf("Area of circle=%.1f\n", area);
+        }
+    } 
+    else if (choice == 2) {
+        double side;
+        if (scanf("%lf", &side) == 1) {
+            double area = side * side;
+            printf("Area of square=%.1f\n", area);
+        }
+    } 
+    else if (choice == 3) {
+        double radius;
+        if (scanf("%lf", &radius) == 1) {
+            double area = 4.0 * PI * radius * radius;
+            printf("Area of sphere=%.1f\n", area);
+        }
+    }
+
+    return 0;
+}
