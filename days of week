@@ -1,0 +1,18 @@
+#include <stdio.h>
+
+int main() {
+    int day;
+    // Map numerical codes to actual days of the week
+    char *days[] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
+    printf("Enter a day code (0-6): ");
+    scanf("%d", &day);
+
+    if (day >= 0 && day <= 6) {
+        printf("The day is %s.\n", days[day]);
+    } else {
+        printf("Invalid day code. Please enter a number between 0 and 6.\n");
+    }
+
+    return 0;
+}
